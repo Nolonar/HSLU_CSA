@@ -13,11 +13,11 @@ namespace SW04
             Explorer700.Joystick.JoystickChanged += Joystick_JoystickChanged;
 
             Explorer700.Led2.Enabled = true;
-            for (int i = 0; i < 100; i++)
+            Explorer700.Buzzer.Beep(100);
+            for (int i = 0; i < 1000; i++)
             {
                 Explorer700.Led1.Toggle();
                 Explorer700.Led2.Toggle();
-                Explorer700.Buzzer.Beep(5);
                 Thread.Sleep(10);
             }
             Explorer700.Led2.Enabled = false;
