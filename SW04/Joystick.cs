@@ -87,6 +87,7 @@ namespace SW04_Explorer700
                 if (newState != oldState)
                     JoystickChanged?.Invoke(this, new KeyEventArgs(newState));
 
+                oldState = newState;
                 Thread.Sleep(50);
             }
         }

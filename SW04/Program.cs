@@ -14,11 +14,11 @@ namespace SW04
 
             Explorer700.Led2.Enabled = true;
             Explorer700.Buzzer.Beep(100);
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 Explorer700.Led1.Toggle();
                 Explorer700.Led2.Toggle();
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
             Explorer700.Led2.Enabled = false;
         }
