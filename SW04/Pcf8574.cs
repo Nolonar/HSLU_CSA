@@ -43,7 +43,14 @@ namespace SW04_Explorer700
         public bool this[int bit]
         {
             get { return (Read() & (1 << bit)) != 0; }
-            set { throw new NotImplementedException("ToDo"); }
+            set
+            {
+                byte val = Read();
+                int mask = 1 << bit;
+                byte set = (byte)(val | mask);
+                byte unset = (byte)(val & ~mask);
+                Write(value ? set : unset);
+            }
         }
         #endregion
 

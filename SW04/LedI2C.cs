@@ -21,15 +21,8 @@ namespace SW04_Explorer700
 
         public override bool Enabled
         {
-            get { return (Pcf8574.Read() & 1 << 4) == 0; }
-            set
-            {
-                byte val = Pcf8574.Read();
-                int mask = 1 << 4;
-                byte set = (byte)(val | mask);
-                byte unset = (byte)(val & ~mask);
-                Pcf8574.Write(value ? unset : set);
-            }
+            get { return !Pcf8574[4]; }
+            set { Pcf8574[4] = !value; }
         }
     }
 }
