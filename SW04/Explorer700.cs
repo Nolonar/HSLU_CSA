@@ -18,11 +18,13 @@ namespace SW04_Explorer700
             Led1 = new LedGpio();
             Led2 = new LedI2C(Pcf8574);
             Buzzer = new Buzzer(Pcf8574);
+            Joystick = new Joystick(Pcf8574);
         }
 
         public Pcf8574 Pcf8574 { get; }
         public LedBase Led1 { get; }
         public LedBase Led2 { get; }
         public Buzzer Buzzer { get; }
+        public Joystick Joystick { get; }
     }
 }

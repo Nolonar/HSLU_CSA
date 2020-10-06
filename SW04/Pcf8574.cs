@@ -47,9 +47,7 @@ namespace SW04_Explorer700
             {
                 byte val = Read();
                 int mask = 1 << bit;
-                byte set = (byte)(val | mask);
-                byte unset = (byte)(val & ~mask);
-                Write(value ? set : unset);
+                Write(value ? (byte)(val | mask) : (byte)(val & ~mask));
             }
         }
         #endregion
