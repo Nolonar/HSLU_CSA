@@ -33,8 +33,10 @@ namespace SW04
 
         private static void Draw(Graphics g)
         {
-            using Brush b = Brushes.Red;
-            g.FillEllipse(b, 0, 0, 10, 10);
+            using (Brush b = Brushes.White)
+            {
+                g.DrawString("Hello world", SystemFonts.DefaultFont, b, 0, 0);
+            }
             Explorer700.Display.Update();
         }
     }
