@@ -1,5 +1,6 @@
 ﻿using SW04_Explorer700;
 using System;
+using System.Drawing;
 using System.Threading;
 
 namespace SW04
@@ -14,6 +15,7 @@ namespace SW04
 
             Explorer700.Led2.Enabled = true;
             Explorer700.Buzzer.Beep(100);
+            Draw(Explorer700.Display.Graphics);
             for (int i = 0; i < 100; i++)
             {
                 Explorer700.Led1.Toggle();
@@ -21,11 +23,19 @@ namespace SW04
                 Thread.Sleep(100);
             }
             Explorer700.Led2.Enabled = false;
+            Explorer700.Display.Clear();
         }
 
         private static void Joystick_JoystickChanged(object sender, KeyEventArgs e)
         {
             Console.WriteLine(e.Keys.ToString());
+        }
+
+        private static void Draw(Graphics g)
+        {
+            using Brush b = Brushes.Red;
+            g.FillEllipse(b, 0, 0, 10, 10);
+            Explorer700.Display.Update();
         }
     }
 }
