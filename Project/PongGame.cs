@@ -135,7 +135,6 @@ namespace Project
 
         private void Draw()
         {
-            Display.Clear();
             DrawArena(Display.Graphics);
             foreach (RenderObject o in GetRenderObjects())
                 o.Draw(Display.Graphics);

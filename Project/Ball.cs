@@ -12,6 +12,7 @@ namespace Project
         private readonly int radius;
 
         private float speed;
+        private Vector2 previousPosition;
 
         public Vector2 Position { get; private set; }
         public Vector2 Direction { get; private set; }
@@ -20,6 +21,7 @@ namespace Project
         {
             this.radius = radius;
             Reset();
+            previousPosition = Position;
         }
 
         public bool IsOut => !PongGame.ScreenDimension.Contains(Position, new Vector2(radius, radius));
@@ -82,8 +84,15 @@ namespace Project
 
         public void Draw(Graphics g)
         {
-            Vector2 renderPos = Position - new Vector2(radius, radius);
-            g.FillEllipse(Brushes.White, renderPos.X, renderPos.Y, radius * 2, radius * 2);
+            float size = radius * 2;
+
+            Vector2 renderPos = previousPosition - new Vector2(radius, radius);
+            g.FillEllipse(Brushes.Black, renderPos.X, renderPos.Y, size, size);
+
+            renderPos = Position - new Vector2(radius, radius);
+            g.FillEllipse(Brushes.White, renderPos.X, renderPos.Y, size, size);
+
+            previousPosition = Position;
         }
     }
 }

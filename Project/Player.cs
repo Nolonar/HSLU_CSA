@@ -15,9 +15,10 @@ namespace Project
     class Player : RenderObject
     {
         private const float speed = 20 / Unit.Second;
+        private Vector2 previousPosition;
 
-        public Vector2 Position;
-        public Vector2 Size;
+        public Vector2 Position { get; private set; }
+        public Vector2 Size { get; }
         public PlayerType Type { get; }
 
         public Player(PlayerType type, int positionX, int width, int height)
@@ -25,6 +26,8 @@ namespace Project
             Type = type;
             Position = new Vector2(positionX, PongGame.ScreenDimension.Height / 2);
             Size = new Vector2(width, height);
+
+            previousPosition = Position;
         }
 
         private bool IsBallApproaching(Ball ball)
@@ -74,8 +77,13 @@ namespace Project
 
         public void Draw(Graphics g)
         {
-            Vector2 renderPos = Position - (Size / 2);
+            Vector2 renderPos = previousPosition - (Size / 2);
+            g.FillRectangle(Brushes.Black, renderPos.X, renderPos.Y, Size.X, Size.Y);
+
+            renderPos = Position - (Size / 2);
             g.FillRectangle(Brushes.White, renderPos.X, renderPos.Y, Size.X, Size.Y);
+
+            previousPosition = Position;
         }
     }
 }
