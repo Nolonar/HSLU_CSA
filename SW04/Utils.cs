@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Explorer700Wrapper
 {
-    class Utils
+    public class Utils
     {
         /// <summary>
         /// Waits for debugger to be attached before proceeding.
