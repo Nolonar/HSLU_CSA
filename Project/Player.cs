@@ -37,8 +37,9 @@ namespace Project
 
         private void KeepInViewport()
         {
-            float edgeTop = PongGame.ScreenDimension.Top + Size.Y;
-            float edgeBottom = PongGame.ScreenDimension.Bottom - Size.Y;
+            float halfSizeY = Size.Y / 2;
+            float edgeTop = PongGame.ScreenDimension.Top + halfSizeY;
+            float edgeBottom = PongGame.ScreenDimension.Bottom - halfSizeY;
 
             float newY = Math.Max(edgeTop, Math.Min(edgeBottom, Position.Y));
             Position = new Vector2(Position.X, newY);
@@ -61,6 +62,9 @@ namespace Project
         private void Move(long delta, float directionY)
         {
             float length = Math.Abs(directionY);
+            if (length == 0)
+                return;
+
             float distance = speed * delta;
             float newY = Position.Y + directionY / length * Math.Min(distance, length);
             Position = new Vector2(Position.X, newY);

@@ -9,10 +9,8 @@ namespace Project
 {
     static class Unit
     {
-        public const float Millisecond = 10;
-        public const float Second = 1000 * Millisecond;
-        public const float Minute = 60 * Second;
-        public const float Hour = 60 * Minute;
+        public const float Millisecond = TimeSpan.TicksPerMillisecond;
+        public const float Second = TimeSpan.TicksPerSecond;
     }
 
     class PongGame
@@ -23,7 +21,7 @@ namespace Project
             Right
         }
 
-        public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 128, 64);
+        public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 126, 64);
 
         private readonly Explorer700 E700;
         private readonly Ball ball;
@@ -46,14 +44,16 @@ namespace Project
             Joystick.JoystickChanged += Joystick_JoystickChanged;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
-            int distanceFromEdge = 10;
+            int distanceFromEdge = 5;
             var PositionsX = new Dictionary<Side, int>()
             {
                 [Side.Left] = distanceFromEdge,
                 [Side.Right] = ScreenDimension.Width - distanceFromEdge
             };
-            player1 = new Player(PlayerType.HumanLocal, PositionsX[Side.Left], 10, 5);
-            player2 = new Player(PlayerType.CPU, PositionsX[Side.Right], 10, 5);
+            int playerWidth = 2;
+            int playerHeight = 15;
+            player1 = new Player(PlayerType.HumanLocal, PositionsX[Side.Left], playerWidth, playerHeight);
+            player2 = new Player(PlayerType.CPU, PositionsX[Side.Right], playerWidth, playerHeight);
             ball = new Ball(2);
 
             servingPlayer = player1;
@@ -70,7 +70,6 @@ namespace Project
 
         private void Joystick_JoystickChanged(object sender, KeyEventArgs e)
         {
-            Buzzer.Enabled = e.Keys.HasFlag(Keys.Center);
             joystickState = e;
         }
 
