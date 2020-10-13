@@ -7,4 +7,4 @@ fi
 echo "Fetching changes"
 git pull
 echo "Building & running"
-dotnet run -p $1/$1.csproj --debug
+dotnet run -p $1/$1.csproj -- --debug

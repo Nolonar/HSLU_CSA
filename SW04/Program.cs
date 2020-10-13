@@ -24,6 +24,7 @@ namespace SW04
                 Explorer700.Led2.Toggle();
                 Thread.Sleep(100);
             }
+            Explorer700.Led1.Enabled = false;
             Explorer700.Led2.Enabled = false;
             Explorer700.Display.Clear();
         }
