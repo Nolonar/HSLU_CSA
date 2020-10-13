@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+
+using Explorer700Wrapper;
 
 namespace Project
 {
@@ -14,11 +14,11 @@ namespace Project
 
     class Player : RenderObject
     {
+        private const float speed = 20 / Unit.Second;
+
         public Vector2 Position;
         public Vector2 Size;
         public PlayerType Type { get; }
-
-        private const float speed = 20 / Unit.Second;
 
         public Player(PlayerType type)
         {
@@ -33,19 +33,37 @@ namespace Project
             return ball.IsMoving && isSameSign;
         }
 
-        public void MoveHuman(long delta)
+        private void KeepInViewport()
         {
+            float edgeTop = PongGame.ScreenDimension.Top + Size.Y;
+            float edgeBottom = PongGame.ScreenDimension.Bottom - Size.Y;
 
+            float newY = Math.Max(edgeTop, Math.Min(edgeBottom, Position.Y));
+            Position = new Vector2(Position.X, newY);
+        }
+
+        public void MoveHuman(long delta, Keys keys)
+        {
+            if (keys.HasFlag(Keys.Down))
+                Move(delta, speed * delta);
+            if (keys.HasFlag(Keys.Up))
+                Move(delta, -speed * delta);
         }
 
         public void MoveCpu(long delta, Ball ball)
         {
-            float targetY = IsBallApproaching(ball) ? ball.Position.Y : 0;
+            float targetY = IsBallApproaching(ball) ? ball.Position.Y : PongGame.ScreenDimension.Height / 2;
+            Move(delta, targetY - Position.Y);
         }
 
-        public void MoveTo(long delta)
+        private void Move(long delta, float directionY)
         {
+            float length = Math.Abs(directionY);
+            float distance = speed * delta;
+            float newY = Position.Y + directionY / length * Math.Min(distance, length);
+            Position = new Vector2(Position.X, newY);
 
+            KeepInViewport();
         }
 
         public void Draw(Graphics g)

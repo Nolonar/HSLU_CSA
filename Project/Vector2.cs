@@ -7,6 +7,8 @@ namespace Project
         public float X { get; }
         public float Y { get; }
 
+        public float Length => (float)Math.Sqrt(X * X + Y * Y);
+
         public Vector2(float x, float y)
         {
             X = x;
@@ -22,7 +24,7 @@ namespace Project
 
         public Vector2 Normalize()
         {
-            float length = (float)Math.Sqrt(X * X + Y * Y);
+            float length = Length;
             return length == 0 ? new Vector2(0, 0) : new Vector2(X / length, Y / length);
         }
 

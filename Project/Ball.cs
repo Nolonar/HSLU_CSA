@@ -5,16 +5,16 @@ namespace Project
 {
     class Ball : RenderObject
     {
-        private readonly int radius;
-
-        public Vector2 Position { get; private set; }
-        public Vector2 Direction { get; private set; }
-        public bool IsMoving { get; private set; }
-
         private const float defaultSpeed = 20 / Unit.Second;
         private const float speedMultiplier = 1.2f;
         private const float maxSpeed = 10 * defaultSpeed;
+
+        private readonly int radius;
+
         private float speed;
+
+        public Vector2 Position { get; private set; }
+        public Vector2 Direction { get; private set; }
 
         public Ball(int radius)
         {
@@ -22,20 +22,26 @@ namespace Project
             Reset();
         }
 
-        public bool IsOut => PongGame.ScreenDimension.Contains(Position, new Vector2(radius, radius));
+        public bool IsOut => !PongGame.ScreenDimension.Contains(Position, new Vector2(radius, radius));
+        public bool IsMoving => Direction.Length != 0;
 
         public void Reset()
         {
             Direction = new Vector2(0, 0);
-            Position = new Vector2(0, 0);
+            Position = new Vector2(PongGame.ScreenDimension.Width / 2, PongGame.ScreenDimension.Height / 2);
             speed = defaultSpeed;
+        }
+
+        public void StartMoving(Player servingPlayer)
+        {
+            Direction = GetBounceDirection(servingPlayer);
         }
 
         /// <summary>
         /// Bounce from the screen edge if collision happened.
         /// </summary>
-        /// <returns>True if collision happened, false otherwise.</returns>
-        public bool BounceFromEdge()
+        /// <returns>True if the ball bounced, false otherwise.</returns>
+        public bool BounceFromScreenEdge()
         {
             int edgeTop = PongGame.ScreenDimension.Top + radius;
             int edgeBottom = PongGame.ScreenDimension.Bottom - radius;
@@ -48,15 +54,30 @@ namespace Project
             return true;
         }
 
-        public void Bounce(Player p)
+        public void Bounce(Player player)
         {
-            Direction = new Vector2(-Direction.X, Direction.Y);
+            Direction = (new Vector2(-Direction.X, Direction.Y) + GetBounceDirection(player)).Normalize();
             speed = Math.Min(speed * speedMultiplier, maxSpeed);
+        }
+
+        private Vector2 GetBounceDirection(Player player)
+        {
+            return (Position - player.Position).Normalize();
         }
 
         public void UpdatePosition(long delta)
         {
+            if (!IsMoving)
+                return;
 
+            Position += Direction * (speed * delta);
+        }
+
+        public bool IsCollided(Player player)
+        {
+            Vector2 difference = player.Position - Position;
+            return Math.Abs(difference.X) <= radius + player.Size.X / 2
+                && Math.Abs(difference.Y) <= radius + player.Size.Y / 2;
         }
 
         public void Draw(Graphics g)

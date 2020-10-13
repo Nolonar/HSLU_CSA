@@ -13,17 +13,22 @@ namespace Explorer700Wrapper
     public class KeyEventArgs
     {
         public readonly Keys Keys;
+        public readonly DateTime Timestamp;
+
+        public long TicksPressed => (DateTime.UtcNow - Timestamp).Ticks;
 
         public KeyEventArgs(Keys keys)
         {
             Keys = keys;
+            Timestamp = DateTime.UtcNow;
         }
     }
 
-    public class Joystick
+    public class Joystick : IDisposable
     {
         #region members & events
-        private IGpioPin centerPin;
+        private readonly IGpioPin centerPin;
+        private bool isRunning;
         public event EventHandler<KeyEventArgs> JoystickChanged;
         #endregion
 
@@ -45,6 +50,7 @@ namespace Explorer700Wrapper
             Process.Start(psi);
 
             // Start Polling-Thread
+            isRunning = true;
             Thread t = new Thread(Run);
             t.IsBackground = true;
             t.Start();
@@ -81,7 +87,7 @@ namespace Explorer700Wrapper
         private void Run()
         {
             Keys oldState = Keys;
-            while (true)
+            while (isRunning)
             {
                 Keys newState = Keys;
                 if (newState != oldState)
@@ -90,6 +96,11 @@ namespace Explorer700Wrapper
                 oldState = newState;
                 Thread.Sleep(50);
             }
+        }
+
+        public void Dispose()
+        {
+            isRunning = false;
         }
         #endregion
     }
