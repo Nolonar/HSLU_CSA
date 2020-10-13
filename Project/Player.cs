@@ -20,9 +20,11 @@ namespace Project
         public Vector2 Size;
         public PlayerType Type { get; }
 
-        public Player(PlayerType type)
+        public Player(PlayerType type, int positionX, int width, int height)
         {
             Type = type;
+            Position = new Vector2(positionX, PongGame.ScreenDimension.Height / 2);
+            Size = new Vector2(width, height);
         }
 
         private bool IsBallApproaching(Ball ball)

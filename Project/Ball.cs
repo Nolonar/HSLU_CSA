@@ -83,7 +83,7 @@ namespace Project
         public void Draw(Graphics g)
         {
             Vector2 renderPos = Position - new Vector2(radius, radius);
-            g.FillEllipse(Brushes.White, renderPos.X, renderPos.Y, radius, radius);
+            g.FillEllipse(Brushes.White, renderPos.X, renderPos.Y, radius * 2, radius * 2);
         }
     }
 }

@@ -17,6 +17,12 @@ namespace Project
 
     class PongGame
     {
+        public enum Side
+        {
+            Left,
+            Right
+        }
+
         public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 128, 64);
 
         private readonly Explorer700 E700;
@@ -40,13 +46,19 @@ namespace Project
             Joystick.JoystickChanged += Joystick_JoystickChanged;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
-            int middle = ScreenDimension.Height / 2;
-            player1 = new Player(PlayerType.HumanLocal);
-            player2 = new Player(PlayerType.CPU);
-            ball = new Ball(5);
+            int distanceFromEdge = 10;
+            var PositionsX = new Dictionary<Side, int>()
+            {
+                [Side.Left] = distanceFromEdge,
+                [Side.Right] = ScreenDimension.Width - distanceFromEdge
+            };
+            player1 = new Player(PlayerType.HumanLocal, PositionsX[Side.Left], 10, 5);
+            player2 = new Player(PlayerType.CPU, PositionsX[Side.Right], 10, 5);
+            ball = new Ball(2);
 
             servingPlayer = player1;
             previousTime = DateTime.UtcNow;
+            joystickState = new KeyEventArgs(Keys.NoKey);
         }
 
         private void CurrentDomain_ProcessExit(object sender, EventArgs e)
@@ -135,7 +147,7 @@ namespace Project
         private void DrawArena(Graphics g)
         {
             int middle = ScreenDimension.Width / 2;
-            g.DrawRectangle(Pens.White, ScreenDimension);
+            g.DrawRectangle(Pens.White, new Rectangle(0, 0, ScreenDimension.Width - 1, ScreenDimension.Height - 1));
             g.DrawLine(Pens.White, middle, ScreenDimension.Top, middle, ScreenDimension.Bottom);
         }
     }
