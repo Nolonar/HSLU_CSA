@@ -14,10 +14,10 @@ namespace SW04
             Explorer700.Joystick.JoystickChanged += Joystick_JoystickChanged;
 
             Explorer700.Led2.Enabled = true;
-            Explorer700.Buzzer.Beep(100);
-            Draw(Explorer700.Display.Graphics);
+            Explorer700.Buzzer.Beep(10);
             for (int i = 0; i < 100; i++)
             {
+                DrawText("Hello world", i, i / 10f);
                 Explorer700.Led1.Toggle();
                 Explorer700.Led2.Toggle();
                 Thread.Sleep(100);
@@ -31,13 +31,16 @@ namespace SW04
             Console.WriteLine(e.Keys.ToString());
         }
 
-        private static void Draw(Graphics g)
+        private static void DrawText(string text, float x, float y)
         {
+            Display display = Explorer700.Display;
+            display.Clear();
+            Graphics g = display.Graphics;
             using (Brush b = Brushes.White)
             {
-                g.DrawString("Hello world", SystemFonts.DefaultFont, b, 0, 0);
+                g.DrawString(text, SystemFonts.DefaultFont, b, x, y);
             }
-            Explorer700.Display.Update();
+            display.Update();
         }
     }
 }
