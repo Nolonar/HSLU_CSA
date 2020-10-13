@@ -7,7 +7,7 @@ using System.Reflection;
 using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi.Native;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public class I2CtoSPI : II2CDevice
     {

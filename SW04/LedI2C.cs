@@ -5,7 +5,7 @@
 
 using System;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public class LedI2C : LedBase
     {

@@ -4,7 +4,7 @@
 // ----------------------------------------------------------------------------
 using System;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     [Flags]
     public enum Keys

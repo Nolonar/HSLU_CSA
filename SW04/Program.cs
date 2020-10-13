@@ -1,4 +1,4 @@
-﻿using SW04_Explorer700;
+﻿using Explorer700Wrapper;
 using System;
 using System.Drawing;
 using System.Threading;
@@ -11,6 +11,8 @@ namespace SW04
 
         static void Main(string[] args)
         {
+            Utils.WaitForDebugger();
+
             Explorer700.Joystick.JoystickChanged += Joystick_JoystickChanged;
 
             Explorer700.Led2.Enabled = true;

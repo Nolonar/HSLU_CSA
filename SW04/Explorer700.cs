@@ -5,7 +5,7 @@
 using Unosquare.RaspberryIO;
 using Unosquare.WiringPi;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public class Explorer700
     {

@@ -3,7 +3,7 @@
 // (c) 2020, Christian Jost, HSLU
 // ----------------------------------------------------------------------------
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public abstract class LedBase
     {

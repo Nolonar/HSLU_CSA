@@ -5,7 +5,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public class Buzzer
     {

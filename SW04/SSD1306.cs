@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 
-namespace SW04_Explorer700
+namespace Explorer700Wrapper
 {
     public class SSD1306 : IDisposable
     {
