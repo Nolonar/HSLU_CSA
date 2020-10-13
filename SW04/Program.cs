@@ -14,7 +14,7 @@ namespace SW04
             Explorer700.Joystick.JoystickChanged += Joystick_JoystickChanged;
 
             Explorer700.Led2.Enabled = true;
-            Explorer700.Buzzer.Beep(10);
+            //Explorer700.Buzzer.Beep(10);
             for (int i = 0; i < 100; i++)
             {
                 DrawText("Hello world", i, i / 10f);
@@ -35,11 +35,7 @@ namespace SW04
         {
             Display display = Explorer700.Display;
             display.Clear();
-            Graphics g = display.Graphics;
-            using (Brush b = Brushes.White)
-            {
-                g.DrawString(text, SystemFonts.DefaultFont, b, x, y);
-            }
+            display.Graphics.DrawString(text, SystemFonts.DefaultFont, Brushes.White, x, y);
             display.Update();
         }
     }
