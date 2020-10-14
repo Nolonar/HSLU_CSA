@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace Project
 {
@@ -23,7 +24,7 @@ namespace Project
         }
 
         public bool IsOut => !PongGame.ScreenDimension.Contains(Position, new Vector2(radius, radius));
-        public bool IsMoving => Direction.Length != 0;
+        public bool IsMoving => Direction.Length() != 0;
 
         public void Reset()
         {
