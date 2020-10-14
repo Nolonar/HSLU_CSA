@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using Explorer700Wrapper;
@@ -20,11 +21,23 @@ namespace Project
         public Vector2 Size { get; }
         public PlayerType Type { get; }
 
-        public Player(PlayerType type, int positionX, int width, int height)
+        public Player(PlayerType type, Side side, int width, int height)
         {
             Type = type;
-            Position = new Vector2(positionX, PongGame.ScreenDimension.Height / 2);
+            Position = GetPositionFromSide(side);
             Size = new Vector2(width, height);
+        }
+
+        private Vector2 GetPositionFromSide(Side side)
+        {
+            int distanceFromEdge = 5;
+            int xPos = new Dictionary<Side, int>()
+            {
+                [Side.Left] = distanceFromEdge,
+                [Side.Right] = PongGame.ScreenDimension.Width - distanceFromEdge
+            }[side];
+            int yPos = PongGame.ScreenDimension.Height / 2;
+            return new Vector2(xPos, yPos);
         }
 
         private bool IsBallApproaching(Ball ball)

@@ -7,6 +7,12 @@ using Explorer700Wrapper;
 
 namespace Project
 {
+    public enum Side
+    {
+        Left,
+        Right
+    }
+
     static class Unit
     {
         public const float Millisecond = TimeSpan.TicksPerMillisecond;
@@ -15,12 +21,6 @@ namespace Project
 
     class PongGame
     {
-        public enum Side
-        {
-            Left,
-            Right
-        }
-
         public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 126, 64);
 
         private readonly Explorer700 E700;
@@ -44,17 +44,12 @@ namespace Project
             Joystick.JoystickChanged += Joystick_JoystickChanged;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
-            int distanceFromEdge = 5;
-            var PositionsX = new Dictionary<Side, int>()
-            {
-                [Side.Left] = distanceFromEdge,
-                [Side.Right] = ScreenDimension.Width - distanceFromEdge
-            };
             int playerWidth = 2;
             int playerHeight = 15;
-            player1 = new Player(PlayerType.HumanLocal, PositionsX[Side.Left], playerWidth, playerHeight);
-            player2 = new Player(PlayerType.CPU, PositionsX[Side.Right], playerWidth, playerHeight);
-            ball = new Ball(2);
+            int ballRadius = 2;
+            player1 = new Player(PlayerType.HumanLocal, Side.Left, playerWidth, playerHeight);
+            player2 = new Player(PlayerType.CPU, Side.Right, playerWidth, playerHeight);
+            ball = new Ball(ballRadius);
 
             servingPlayer = player1;
             previousTime = DateTime.UtcNow;
