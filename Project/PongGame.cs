@@ -70,13 +70,14 @@ namespace Project
 
         private IEnumerable<Player> GetPlayers()
         {
-            yield return player1;
-            yield return player2;
+            return GetRenderObjects().OfType<Player>();
         }
 
         private IEnumerable<RenderObject> GetRenderObjects()
         {
-            return GetPlayers().OfType<RenderObject>().Concat(new[] { ball });
+            yield return player1;
+            yield return player2;
+            yield return ball;
         }
 
         public void Run()
@@ -92,19 +93,21 @@ namespace Project
             }
         }
 
+        private void ProcessInput()
+        {
+            if (!joystickState.Keys.HasFlag(Keys.Center))
+                return;
+
+            if (!ball.IsMoving)
+                ball.StartMoving(servingPlayer);
+
+            if (joystickState.TicksPressed >= 1 * Unit.Second)
+                isGameRunning = false;
+        }
+
         private void Update(TimeSpan delta)
         {
-            if (joystickState.Keys.HasFlag(Keys.Center))
-            {
-                if (!ball.IsMoving)
-                    ball.StartMoving(servingPlayer);
-
-                if (joystickState.TicksPressed >= 1 * Unit.Second)
-                {
-                    isGameRunning = false;
-                    return;
-                }
-            }
+            ProcessInput();
 
             long ticks = delta.Ticks;
             ball.UpdatePosition(ticks);
