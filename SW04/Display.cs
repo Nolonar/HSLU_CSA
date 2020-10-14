@@ -69,10 +69,11 @@ namespace Explorer700Wrapper
         }
 
 
-        public void Clear()
+        public void Clear(bool doRefresh = false)
         {
             Graphics.Clear(Color.Black);
-            Update();
+            if (doRefresh)
+                Update();
         }
 
 

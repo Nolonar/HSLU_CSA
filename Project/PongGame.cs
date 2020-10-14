@@ -64,7 +64,7 @@ namespace Project
         private void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
             Buzzer.Enabled = Led1.Enabled = Led2.Enabled = false;
-            Display.Clear();
+            Display.Clear(doRefresh: true);
             Joystick.Dispose();
         }
 
@@ -135,6 +135,7 @@ namespace Project
 
         private void Draw()
         {
+            Display.Clear();
             DrawArena(Display.Graphics);
             foreach (RenderObject o in GetRenderObjects())
                 o.Draw(Display.Graphics);
