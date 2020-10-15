@@ -37,6 +37,7 @@ namespace Project
         private static bool isProgramRunning = true;
         private static int selectedIndex = 0;
         private static long currentKeyDelay = 0;
+        private static DateTime lastKeyPress;
 
         private static (string Text, Action Execute) SelectedCommand => commands[selectedIndex];
 
@@ -44,6 +45,7 @@ namespace Project
         {
             e700 = new Explorer700();
             InputManager = new InputManager(Joystick);
+            lastKeyPress = InputManager.LastChanged;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
         }
 
@@ -72,9 +74,6 @@ namespace Project
 
         static void MoveSelection()
         {
-            if (InputManager.KeysPressed == Keys.NoKey)
-                currentKeyDelay = 0;
-
             if (InputManager.IsKeyPressed(Keys.Down, currentKeyDelay))
                 selectedIndex = (selectedIndex + 1) % commands.Count;
             if (InputManager.IsKeyPressed(Keys.Up, currentKeyDelay))
@@ -82,25 +81,36 @@ namespace Project
 
             selectedIndex = (selectedIndex + commands.Count) % commands.Count; // selectedIndex could've been negative.
 
-            if (InputManager.IsKeyPressed(Keys.Center))
+            if (InputManager.IsKeyPressed(Keys.Center) && lastKeyPress != InputManager.LastChanged)
+            {
                 SelectedCommand.Execute();
+                lastKeyPress = InputManager.LastChanged;
+            }
 
-            currentKeyDelay += inputDelay;
+            if (InputManager.KeysPressed == Keys.NoKey)
+                currentKeyDelay = 0;
+            else
+                currentKeyDelay += inputDelay;
         }
 
         static void Draw(Graphics g)
         {
+            Display.Clear();
             for (int i = 0; i < commands.Count; i++)
                 DrawCommand(g, SystemFonts.DefaultFont, i, padding: 2);
+
+            Display.Update();
         }
 
         static void DrawCommand(Graphics g, Font font, int index, int padding)
         {
-            Brush textBrush = Brushes.White;
             string text = commands[index].Text;
             int distanceFromCenter = index - selectedIndex;
             var textRect = GetTextRectangle(g, font, text, padding, distanceFromCenter);
+            if (textRect.Top < 0 || textRect.Bottom > ScreenDimension.Height)
+                return;
 
+            Brush textBrush = Brushes.White;
             if (distanceFromCenter == 0)
             {
                 var selectionRect = new RectangleF(textRect.Left, textRect.Top - padding, textRect.Width, textRect.Height + 2 * padding);
