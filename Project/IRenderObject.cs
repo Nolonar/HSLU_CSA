@@ -2,7 +2,7 @@
 
 namespace Project
 {
-    interface RenderObject
+    interface IRenderObject
     {
         void Draw(Graphics g);
     }

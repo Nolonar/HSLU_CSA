@@ -13,14 +13,10 @@ namespace Explorer700Wrapper
     public class KeyEventArgs
     {
         public readonly Keys Keys;
-        public readonly DateTime Timestamp;
-
-        public long TicksPressed => (DateTime.UtcNow - Timestamp).Ticks;
 
         public KeyEventArgs(Keys keys)
         {
             Keys = keys;
-            Timestamp = DateTime.UtcNow;
         }
     }
 

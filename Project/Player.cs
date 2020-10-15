@@ -13,7 +13,7 @@ namespace Project
         CPU
     }
 
-    class Player : RenderObject
+    class Player : IRenderObject
     {
         private const float speed = 20 / Unit.Second;
 
@@ -34,9 +34,9 @@ namespace Project
             int xPos = new Dictionary<Side, int>()
             {
                 [Side.Left] = distanceFromEdge,
-                [Side.Right] = PongGame.ScreenDimension.Width - distanceFromEdge
+                [Side.Right] = Program.ScreenDimension.Width - distanceFromEdge
             }[side];
-            int yPos = PongGame.ScreenDimension.Height / 2;
+            int yPos = Program.ScreenDimension.Height / 2;
             return new Vector2(xPos, yPos);
         }
 
@@ -51,8 +51,8 @@ namespace Project
         private void KeepInViewport()
         {
             float halfSizeY = Size.Y / 2;
-            float edgeTop = PongGame.ScreenDimension.Top + halfSizeY;
-            float edgeBottom = PongGame.ScreenDimension.Bottom - halfSizeY;
+            float edgeTop = Program.ScreenDimension.Top + halfSizeY;
+            float edgeBottom = Program.ScreenDimension.Bottom - halfSizeY;
 
             float newY = Math.Max(edgeTop, Math.Min(edgeBottom, Position.Y));
             Position = new Vector2(Position.X, newY);
@@ -68,7 +68,7 @@ namespace Project
 
         public void MoveCpu(long delta, Ball ball)
         {
-            float targetY = IsBallApproaching(ball) ? ball.Position.Y : PongGame.ScreenDimension.Height / 2;
+            float targetY = IsBallApproaching(ball) ? ball.Position.Y : Program.ScreenDimension.Height / 2;
             Move(delta, targetY - Position.Y);
         }
 

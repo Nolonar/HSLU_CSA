@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Project
 {
-    class Ball : RenderObject
+    class Ball : IRenderObject
     {
         private const float defaultSpeed = 20 / Unit.Second;
         private const float speedMultiplier = 1.2f;
@@ -23,13 +23,13 @@ namespace Project
             Reset();
         }
 
-        public bool IsOut => !PongGame.ScreenDimension.Contains(Position, new Vector2(radius, radius));
+        public bool IsOut => !Program.ScreenDimension.Contains(Position, new Vector2(radius, radius));
         public bool IsMoving => Direction.Length() != 0;
 
         public void Reset()
         {
             Direction = new Vector2(0, 0);
-            Position = new Vector2(PongGame.ScreenDimension.Width / 2, PongGame.ScreenDimension.Height / 2);
+            Position = new Vector2(Program.ScreenDimension.Width / 2, Program.ScreenDimension.Height / 2);
             speed = defaultSpeed;
         }
 
@@ -44,8 +44,8 @@ namespace Project
         /// <returns>True if the ball bounced, false otherwise.</returns>
         public bool BounceFromScreenEdge()
         {
-            int edgeTop = PongGame.ScreenDimension.Top + radius;
-            int edgeBottom = PongGame.ScreenDimension.Bottom - radius;
+            int edgeTop = Program.ScreenDimension.Top + radius;
+            int edgeBottom = Program.ScreenDimension.Bottom - radius;
             if (Position.Y >= edgeTop && Position.Y <= edgeBottom)
                 return false;
 
