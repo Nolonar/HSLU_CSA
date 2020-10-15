@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using Explorer700Wrapper;
 
-namespace Project
+namespace Project.Pong
 {
     public enum PlayerType
     {
@@ -15,7 +15,7 @@ namespace Project
 
     class Player : IRenderObject
     {
-        private const float speed = 20 / Unit.Second;
+        private const float speed = 20f / Unit.Second;
 
         public Vector2 Position { get; private set; }
         public Vector2 Size { get; }

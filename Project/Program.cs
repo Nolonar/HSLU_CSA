@@ -7,19 +7,26 @@ using Explorer700Wrapper;
 
 namespace Project
 {
+    static class Unit
+    {
+        public const long Millisecond = TimeSpan.TicksPerMillisecond;
+        public const long Second = TimeSpan.TicksPerSecond;
+    }
+
     class Program
     {
         public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 126, 64);
         public static readonly InputManager InputManager;
 
-        private static readonly Dictionary<string, Action> commands = new Dictionary<string, Action>()
+        private static readonly List<(string Text, Action Execute)> commands = new List<(string, Action)>()
         {
-            ["Play Pong"] = () => new PongGame().Run(),
-            ["Play Gravity Pong"] = () => new PongGame().Run(), // TODO
-            ["Exit"] = () => isProgramRunning = false,
-            ["Shutdown Raspberry Pi"] = () => Process.Start("halt")
+            ("Play Pong", () => new Pong.Game().Run()),
+            ("Play Gravity Pong", () => new GravityPong.Game().Run()),
+            ("Exit", () => isProgramRunning = false),
+            ("Shutdown Raspberry Pi", () => Process.Start("halt"))
         };
         private static readonly Explorer700 e700;
+        private const long inputDelay = 500 * Unit.Millisecond; // How long to wait before holding a key is recognized as additional key press.
 
         public static Display Display => e700.Display;
         public static Buzzer Buzzer => e700.Buzzer;
@@ -28,6 +35,10 @@ namespace Project
         public static Joystick Joystick => e700.Joystick;
 
         private static bool isProgramRunning = true;
+        private static int selectedIndex = 0;
+        private static long currentKeyDelay = 0;
+
+        private static (string Text, Action Execute) SelectedCommand => commands[selectedIndex];
 
         static Program()
         {
@@ -54,14 +65,59 @@ namespace Project
         {
             while (isProgramRunning)
             {
-                new PongGame().Run();
-                isProgramRunning = false; // TODO
+                MoveSelection();
+                Draw(Display.Graphics);
             }
         }
 
-        static void Draw()
+        static void MoveSelection()
         {
+            if (InputManager.KeysPressed == Keys.NoKey)
+                currentKeyDelay = 0;
 
+            if (InputManager.IsKeyPressed(Keys.Down, currentKeyDelay))
+                selectedIndex = (selectedIndex + 1) % commands.Count;
+            if (InputManager.IsKeyPressed(Keys.Up, currentKeyDelay))
+                selectedIndex = (selectedIndex - 1) % commands.Count;
+
+            selectedIndex = (selectedIndex + commands.Count) % commands.Count; // selectedIndex could've been negative.
+
+            if (InputManager.IsKeyPressed(Keys.Center))
+                SelectedCommand.Execute();
+
+            currentKeyDelay += inputDelay;
+        }
+
+        static void Draw(Graphics g)
+        {
+            for (int i = 0; i < commands.Count; i++)
+                DrawCommand(g, SystemFonts.DefaultFont, i, padding: 2);
+        }
+
+        static void DrawCommand(Graphics g, Font font, int index, int padding)
+        {
+            Brush textBrush = Brushes.White;
+            string text = commands[index].Text;
+            int distanceFromCenter = index - selectedIndex;
+            var textRect = GetTextRectangle(g, font, text, padding, distanceFromCenter);
+
+            if (distanceFromCenter == 0)
+            {
+                var selectionRect = new RectangleF(textRect.Left, textRect.Top - padding, textRect.Width, textRect.Height + 2 * padding);
+                g.FillRectangle(Brushes.White, selectionRect);
+                textBrush = Brushes.Black;
+            }
+
+            g.DrawString(text, font, textBrush, textRect);
+        }
+
+        static RectangleF GetTextRectangle(Graphics g, Font font, string text, int margin, int distanceFromCenter)
+        {
+            float height = g.MeasureString(text, font).Height;
+            float center = (ScreenDimension.Height - height) / 2;
+            float x = 0;
+            float y = center + (height + margin) * distanceFromCenter;
+            return new RectangleF(x, y, ScreenDimension.Width, height);
         }
     }
 }

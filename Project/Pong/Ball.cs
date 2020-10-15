@@ -2,20 +2,20 @@
 using System.Drawing;
 using System.Numerics;
 
-namespace Project
+namespace Project.Pong
 {
     class Ball : IRenderObject
     {
-        private const float defaultSpeed = 20 / Unit.Second;
+        private const float defaultSpeed = 20f / Unit.Second;
         private const float speedMultiplier = 1.2f;
         private const float maxSpeed = 10 * defaultSpeed;
 
         private readonly int radius;
 
-        private float speed;
+        protected float speed;
 
-        public Vector2 Position { get; private set; }
-        public Vector2 Direction { get; private set; }
+        public Vector2 Position { get; protected set; }
+        public Vector2 Direction { get; protected set; }
 
         public Ball(int radius)
         {
@@ -42,7 +42,7 @@ namespace Project
         /// Bounce from the screen edge if collision happened.
         /// </summary>
         /// <returns>True if the ball bounced, false otherwise.</returns>
-        public bool BounceFromScreenEdge()
+        public virtual bool BounceFromScreenEdge()
         {
             int edgeTop = Program.ScreenDimension.Top + radius;
             int edgeBottom = Program.ScreenDimension.Bottom - radius;
@@ -55,7 +55,7 @@ namespace Project
             return true;
         }
 
-        public void Bounce(Player player)
+        public virtual void Bounce(Player player)
         {
             Direction = (new Vector2(-Direction.X, Direction.Y) + GetBounceDirection(player)).Normalize();
             speed = Math.Min(speed * speedMultiplier, maxSpeed);
@@ -66,7 +66,7 @@ namespace Project
             return (Position - player.Position).Normalize();
         }
 
-        public void UpdatePosition(long delta)
+        public virtual void UpdatePosition(long delta)
         {
             if (!IsMoving)
                 return;

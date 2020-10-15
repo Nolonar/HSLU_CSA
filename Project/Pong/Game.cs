@@ -5,7 +5,7 @@ using System.Linq;
 
 using Explorer700Wrapper;
 
-namespace Project
+namespace Project.Pong
 {
     public enum Side
     {
@@ -13,31 +13,29 @@ namespace Project
         Right
     }
 
-    static class Unit
+    class Game
     {
-        public const float Millisecond = TimeSpan.TicksPerMillisecond;
-        public const float Second = TimeSpan.TicksPerSecond;
-    }
+        protected readonly Ball ball;
 
-    class PongGame
-    {
-        private readonly Ball ball;
         private readonly Player player1;
         private readonly Player player2;
-        private Player servingPlayer;
+        private readonly Player servingPlayer;
         private bool isGameRunning;
         private DateTime previousTime;
 
-        private InputManager inputManager => Program.InputManager;
+        protected const int playerWidth = 2;
+        protected const int playerHeight = 15;
+        protected const int ballRadius = 2;
 
-        public PongGame()
+        private InputManager InputManager => Program.InputManager;
+
+        public Game() : this(new Ball(ballRadius)) { /* No additional code. */ }
+
+        public Game(Ball ball)
         {
-            int playerWidth = 2;
-            int playerHeight = 15;
-            int ballRadius = 2;
             player1 = new Player(PlayerType.HumanLocal, Side.Left, playerWidth, playerHeight);
             player2 = new Player(PlayerType.CPU, Side.Right, playerWidth, playerHeight);
-            ball = new Ball(ballRadius);
+            this.ball = ball;
 
             servingPlayer = player1;
             previousTime = DateTime.UtcNow;
@@ -70,13 +68,13 @@ namespace Project
 
         private void ProcessInput()
         {
-            if (!inputManager.IsKeyPressed(Keys.Center))
+            if (!InputManager.IsKeyPressed(Keys.Center))
                 return;
 
             if (!ball.IsMoving)
                 ball.StartMoving(servingPlayer);
 
-            if (inputManager.IsKeyPressed(Keys.Center, 1 * Unit.Second))
+            if (InputManager.IsKeyPressed(Keys.Center, 1 * Unit.Second))
                 isGameRunning = false;
         }
 
@@ -96,7 +94,7 @@ namespace Project
                 ball.Bounce(playerCollided);
             }
 
-            GetPlayers().FirstOrDefault(p => p.Type == PlayerType.HumanLocal)?.MoveHuman(ticks, inputManager.KeysPressed);
+            GetPlayers().FirstOrDefault(p => p.Type == PlayerType.HumanLocal)?.MoveHuman(ticks, InputManager.KeysPressed);
             GetPlayers().FirstOrDefault(p => p.Type == PlayerType.CPU)?.MoveCpu(ticks, ball);
 
             if (ball.IsOut)

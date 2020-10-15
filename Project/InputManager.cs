@@ -11,6 +11,7 @@ namespace Project
         public static IEnumerable<Keys> UniqueKeys => Enum.GetValues(typeof(Keys)).Cast<Keys>();
 
         public Keys KeysPressed { get; private set; } = Keys.NoKey;
+        public DateTime LastChanged = DateTime.UtcNow;
 
         private readonly Dictionary<Keys, DateTime> lastPressed = new Dictionary<Keys, DateTime>();
 
@@ -23,8 +24,9 @@ namespace Project
         private void Joystick_JoystickChanged(object sender, KeyEventArgs e)
         {
             KeysPressed = e.Keys;
+            LastChanged = DateTime.UtcNow;
             foreach (Keys key in UniqueKeys.Where(k => KeysPressed.HasFlag(k)))
-                lastPressed[key] = DateTime.UtcNow;
+                lastPressed[key] = LastChanged;
         }
 
         /// <summary>
