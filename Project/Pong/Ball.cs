@@ -6,13 +6,11 @@ namespace Project.Pong
 {
     class Ball : IRenderObject
     {
-        private const float defaultSpeed = 20f / Unit.Second;
+        private const float startingSpeed = 20f / Unit.Second;
         private const float speedMultiplier = 1.2f;
-        private const float maxSpeed = 10 * defaultSpeed;
+        private const float maxSpeed = 10 * startingSpeed;
 
         private readonly int radius;
-
-        protected float speed;
 
         public Vector2 Position { get; protected set; }
         public Vector2 Direction { get; protected set; }
@@ -30,12 +28,11 @@ namespace Project.Pong
         {
             Direction = new Vector2(0, 0);
             Position = new Vector2(Program.ScreenDimension.Width / 2, Program.ScreenDimension.Height / 2);
-            speed = defaultSpeed;
         }
 
         public void StartMoving(Player servingPlayer)
         {
-            Direction = GetBounceDirection(servingPlayer);
+            Direction = GetBounceDirection(servingPlayer) * startingSpeed;
         }
 
         /// <summary>
@@ -57,21 +54,18 @@ namespace Project.Pong
 
         public virtual void Bounce(Player player)
         {
-            Direction = (new Vector2(-Direction.X, Direction.Y) + GetBounceDirection(player)).Normalize();
-            speed = Math.Min(speed * speedMultiplier, maxSpeed);
+            Direction = GetBounceDirection(player) * Math.Min(Direction.Length() * speedMultiplier, maxSpeed);
         }
 
         private Vector2 GetBounceDirection(Player player)
-        {
-            return (Position - player.Position).Normalize();
-        }
+            => (Position - player.Position).Normalize();
 
         public virtual void UpdatePosition(long delta)
         {
             if (!IsMoving)
                 return;
 
-            Position += Direction * (speed * delta);
+            Position += Direction * delta;
         }
 
         public bool IsCollided(Player player)

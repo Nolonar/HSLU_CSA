@@ -4,9 +4,9 @@ namespace Project.GravityPong
 {
     class Ball : Pong.Ball
     {
-        public Vector2 Gravity = new Vector2(0, 10f / Unit.Second);
+        public readonly Vector2 Gravity = new Vector2(0, 10f / Unit.Second);
 
-        private float bounceCoefficient = 0.9f;
+        private readonly float bounceCoefficient = 0.9f;
 
         public Ball(int radius) : base(radius) { /* No additional code. */ }
 
@@ -20,15 +20,9 @@ namespace Project.GravityPong
         {
             bool didBounce = base.BounceFromScreenEdge();
             if (didBounce)
-                speed *= bounceCoefficient;
+                Direction = Direction.Normalize() * Direction.Length() * bounceCoefficient;
 
             return didBounce;
-        }
-
-        public override void Bounce(Pong.Player player)
-        {
-            base.Bounce(player);
-            speed *= bounceCoefficient;
         }
     }
 }
