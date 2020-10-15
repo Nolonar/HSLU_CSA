@@ -4,7 +4,7 @@ namespace Project.GravityPong
 {
     class Ball : Pong.Ball
     {
-        public readonly Vector2 Gravity = new Vector2(0, 0.000001f / Unit.Second);
+        public readonly Vector2 Gravity = new Vector2(0, 0.00001f / Unit.Second);
 
         public Ball(int radius) : base(radius) { /* No additional code. */ }
 
