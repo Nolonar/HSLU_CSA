@@ -39,7 +39,7 @@ namespace Project.Pong
         /// Bounce from the screen edge if collision happened.
         /// </summary>
         /// <returns>True if the ball bounced, false otherwise.</returns>
-        public virtual bool BounceFromScreenEdge()
+        public bool BounceFromScreenEdge()
         {
             int edgeTop = Program.ScreenDimension.Top + radius;
             int edgeBottom = Program.ScreenDimension.Bottom - radius;
@@ -52,9 +52,11 @@ namespace Project.Pong
             return true;
         }
 
-        public virtual void Bounce(Player player)
+        public void Bounce(Player player)
         {
-            Direction = GetBounceDirection(player) * Math.Min(Direction.Length() * speedMultiplier, maxSpeed);
+            float newSpeed = Math.Min(Direction.Length() * speedMultiplier, maxSpeed);
+            Vector2 bounced = (new Vector2(-Direction.X, Direction.Y) + GetBounceDirection(player));
+            Direction = bounced.Normalize() * newSpeed;
         }
 
         private Vector2 GetBounceDirection(Player player)
