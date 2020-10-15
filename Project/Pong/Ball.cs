@@ -6,9 +6,9 @@ namespace Project.Pong
 {
     class Ball : IRenderObject
     {
-        private const float startingSpeed = 20f / Unit.Second;
-        private const float speedMultiplier = 1.2f;
-        private const float maxSpeed = 10 * startingSpeed;
+        protected const float startingSpeed = 20f / Unit.Second;
+        protected const float speedMultiplier = 1.2f;
+        protected const float maxSpeed = 10 * startingSpeed;
 
         private readonly int radius;
 
@@ -24,7 +24,7 @@ namespace Project.Pong
         public bool IsOut => !Program.ScreenDimension.Contains(Position, new Vector2(radius, radius));
         public bool IsMoving => Direction.Length() != 0;
 
-        public void Reset()
+        public virtual void Reset()
         {
             Direction = new Vector2(0, 0);
             Position = new Vector2(Program.ScreenDimension.Width / 2, Program.ScreenDimension.Height / 2);
@@ -52,7 +52,7 @@ namespace Project.Pong
             return true;
         }
 
-        public void Bounce(Player player)
+        public virtual void Bounce(Player player)
         {
             float newSpeed = Math.Min(Direction.Length() * speedMultiplier, maxSpeed);
             Vector2 bounced = (new Vector2(-Direction.X, Direction.Y) + GetBounceDirection(player));
