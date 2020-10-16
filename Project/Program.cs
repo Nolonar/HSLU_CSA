@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
+using System.Numerics;
 
 using Explorer700Wrapper;
 
@@ -15,15 +15,16 @@ namespace Project
 
     class Program
     {
-        public static readonly Rectangle ScreenDimension = new Rectangle(0, 0, 126, 64);
+        public static readonly Vector2 ScreenDimension = new Vector2(126, 64);
+        public static readonly Rectangle ScreenRect = new Rectangle(0, 0, 126, 64);
         public static readonly InputManager InputManager;
 
         private static readonly List<(string Text, Action Execute)> commands = new List<(string, Action)>()
         {
             ("Play Pong", () => new Pong.Game().Run()),
-            ("Play Gravity Pong", () => new GravityPong.Game().Run()),
-            ("Exit", () => isProgramRunning = false),
-            ("Shutdown Raspberry Pi", () => Process.Start("halt"))
+            ("Play GravityPong", () => new GravityPong.Game().Run()),
+            ("Play Snake", () => new Snake.Game().Run()),
+            ("Exit", () => isProgramRunning = false)
         };
         private static readonly Explorer700 e700;
         private const long inputDelay = 500 * Unit.Millisecond; // How long to wait before holding a key is recognized as additional key press.
@@ -107,7 +108,7 @@ namespace Project
             string text = commands[index].Text;
             int distanceFromCenter = index - selectedIndex;
             var textRect = GetTextRectangle(g, font, text, padding, distanceFromCenter);
-            if (textRect.Top < 0 || textRect.Bottom > ScreenDimension.Height)
+            if (textRect.Top < 0 || textRect.Bottom > ScreenRect.Height)
                 return;
 
             Brush textBrush = Brushes.White;
@@ -124,10 +125,10 @@ namespace Project
         static RectangleF GetTextRectangle(Graphics g, Font font, string text, int margin, int distanceFromCenter)
         {
             float height = g.MeasureString(text, font).Height;
-            float center = (ScreenDimension.Height - height) / 2;
+            float center = (ScreenRect.Height - height) / 2;
             float x = 0;
             float y = center + (height + margin) * distanceFromCenter;
-            return new RectangleF(x, y, ScreenDimension.Width, height);
+            return new RectangleF(x, y, ScreenRect.Width, height);
         }
     }
 }

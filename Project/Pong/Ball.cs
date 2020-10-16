@@ -21,13 +21,13 @@ namespace Project.Pong
             Reset();
         }
 
-        public bool IsOut => !Program.ScreenDimension.Contains(Position, new Vector2(radius, radius));
+        public bool IsOut => !Program.ScreenRect.Contains(Position, new Vector2(radius));
         public bool IsMoving => Direction.Length() != 0;
 
         public virtual void Reset()
         {
-            Direction = new Vector2(0, 0);
-            Position = new Vector2(Program.ScreenDimension.Width / 2, Program.ScreenDimension.Height / 2);
+            Direction = Vector2.Zero;
+            Position = Program.ScreenDimension / 2;
         }
 
         public void StartMoving(Player servingPlayer)
@@ -41,8 +41,8 @@ namespace Project.Pong
         /// <returns>True if the ball bounced, false otherwise.</returns>
         public bool BounceFromScreenEdge()
         {
-            int edgeTop = Program.ScreenDimension.Top + radius;
-            int edgeBottom = Program.ScreenDimension.Bottom - radius;
+            int edgeTop = Program.ScreenRect.Top + radius;
+            int edgeBottom = Program.ScreenRect.Bottom - radius;
             if (Position.Y >= edgeTop && Position.Y <= edgeBottom)
                 return false;
 
@@ -80,7 +80,7 @@ namespace Project.Pong
         public void Draw(Graphics g)
         {
             float size = radius * 2;
-            Vector2 renderPos = Position - new Vector2(radius, radius);
+            Vector2 renderPos = Position - new Vector2(radius);
             g.FillEllipse(Brushes.White, renderPos.X, renderPos.Y, size, size);
         }
     }

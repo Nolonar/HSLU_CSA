@@ -116,10 +116,10 @@ namespace Project.Pong
 
         private void DrawArena(Graphics g)
         {
-            var screenDimension = Program.ScreenDimension;
-            int middle = screenDimension.Width / 2;
-            g.DrawRectangle(Pens.White, new Rectangle(0, 0, screenDimension.Width - 1, screenDimension.Height - 1));
-            g.DrawLine(Pens.White, middle, screenDimension.Top, middle, screenDimension.Bottom);
+            var screenRect = Program.ScreenRect;
+            int middle = screenRect.Width / 2;
+            g.DrawRectangle(Pens.White, new Rectangle(0, 0, screenRect.Width - 1, screenRect.Height - 1));
+            g.DrawLine(Pens.White, middle, screenRect.Top, middle, screenRect.Bottom);
         }
     }
 }
