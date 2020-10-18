@@ -28,6 +28,14 @@ namespace Project.Snake
             [Keys.Right] = Direction.Right,
             [Keys.Down] = Direction.Down
         };
+        private readonly Dictionary<Direction, Direction> oppositeDirectionMapper = new Dictionary<Direction, Direction>()
+        {
+            [Direction.Up] = Direction.Down,
+            [Direction.Left] = Direction.Right,
+            [Direction.Right] = Direction.Left,
+            [Direction.Down] = Direction.Up,
+            [Direction.None] = Direction.None
+        };
 
         private Direction direction;
 
@@ -47,6 +55,8 @@ namespace Project.Snake
         public void Shrink() => bodySegmentPositions.RemoveFirst();
         public bool IsSelfCollided() => bodySegmentPositions.Any(p => p == Position);
 
+        private bool IsMoveAllowed(Keys keyPressed) => keyDirectionMapper[keyPressed] != oppositeDirectionMapper[direction];
+
         public void Eat(Food food)
         {
             Grow();
@@ -62,9 +72,9 @@ namespace Project.Snake
 
         public void ChangeDirection(Keys keys)
         {
-            Keys keyPressed = keyDirectionMapper.Keys.FirstOrDefault(key => keys.HasFlag(key));
-            if (keyDirectionMapper.ContainsKey(keyPressed))
-                direction = keyDirectionMapper[keyPressed];
+            IEnumerable<Keys> keysPressed = keyDirectionMapper.Keys.Where(key => keys.HasFlag(key) && IsMoveAllowed(key));
+            if (keysPressed.Any())
+                direction = keyDirectionMapper[keysPressed.First()];
         }
 
         public void UpdatePosition()
