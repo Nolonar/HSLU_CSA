@@ -72,14 +72,16 @@ namespace Project.Snake
 
             Player.Grow();
             Player.UpdatePosition();
+            Player.Shrink();
+            if (Player.IsSelfCollided())
+            {
+                Program.Buzzer.Beep(100);
+                Reset();
+            }
             if (Player.Position == Food.Position)
             {
                 Program.Buzzer.Beep(1);
                 Player.Eat(Food);
-            }
-            else
-            {
-                Player.Shrink();
             }
         }
 

@@ -43,6 +43,16 @@ namespace Project.Snake
             Reset();
         }
 
+        public void Grow() => bodySegmentPositions.AddLast(Position);
+        public void Shrink() => bodySegmentPositions.RemoveFirst();
+        public bool IsSelfCollided() => bodySegmentPositions.Any(p => p == Position);
+
+        public void Eat(Food food)
+        {
+            Grow();
+            food.MoveToNewPosition(this);
+        }
+
         public void Reset()
         {
             Position = startingPosition;
@@ -75,14 +85,6 @@ namespace Project.Snake
             newX = (newX + Game.FieldDimension.X) % Game.FieldDimension.X;
             newY = (newY + Game.FieldDimension.Y) % Game.FieldDimension.Y;
             Position = new Vector2(newX, newY);
-        }
-
-        public void Grow() => bodySegmentPositions.AddLast(Position);
-        public void Shrink() => bodySegmentPositions.RemoveFirst();
-
-        public void Eat(Food food)
-        {
-            food.MoveToNewPosition(this);
         }
 
         public void Draw(Graphics g)
