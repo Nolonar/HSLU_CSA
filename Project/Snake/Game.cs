@@ -68,11 +68,11 @@ namespace Project.Snake
                 return;
 
             currentMoveDelay %= moveDelay;
-
             Player.ChangeDirection(InputManager.KeysPressed);
-            if (Player.IsMoving)
-                Player.Grow();
+            if (!Player.IsMoving)
+                return;
 
+            Player.Grow();
             Player.UpdatePosition();
             if (Player.Position == Food.Position)
             {

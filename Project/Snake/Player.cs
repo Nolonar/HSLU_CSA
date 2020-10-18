@@ -38,7 +38,7 @@ namespace Project.Snake
 
         public Player(Vector2 startingPosition)
         {
-            this.startingPosition = startingPosition;
+            this.startingPosition = new Vector2((int)startingPosition.X, (int)startingPosition.Y);
 
             Reset();
         }
