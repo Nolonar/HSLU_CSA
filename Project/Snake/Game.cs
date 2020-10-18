@@ -8,7 +8,7 @@ namespace Project.Snake
 {
     class Game
     {
-        private const long moveDelay = 500 * Unit.Millisecond;
+        private const long moveDelay = 150 * Unit.Millisecond;
 
         private long currentMoveDelay = 0;
         private bool isGameRunning;
@@ -62,14 +62,12 @@ namespace Project.Snake
         private void Update(TimeSpan delta)
         {
             ProcessInput();
-
-            currentMoveDelay += delta.Ticks;
-            if (currentMoveDelay < moveDelay)
-                return;
-
-            currentMoveDelay %= moveDelay;
             Player.ChangeDirection(InputManager.KeysPressed);
             if (!Player.IsMoving)
+                return;
+
+            currentMoveDelay += delta.Ticks;
+            if (currentMoveDelay == (currentMoveDelay %= moveDelay))
                 return;
 
             Player.Grow();
