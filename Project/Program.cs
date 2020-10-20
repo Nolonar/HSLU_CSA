@@ -48,6 +48,7 @@ namespace Project
             InputManager = new InputManager(Joystick);
             lastKeyPress = InputManager.LastChanged;
             AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
+            Reset();
         }
 
         static void Main(string[] args)
@@ -59,12 +60,17 @@ namespace Project
 
         private static void CurrentDomain_ProcessExit(object sender, EventArgs e)
         {
-            Buzzer.Enabled = Led1.Enabled = Led2.Enabled = false;
-            Display.Clear(doRefresh: true);
+            Reset();
             Joystick.Dispose();
         }
 
-        static void Run()
+        private static void Reset()
+        {
+            Buzzer.Enabled = Led1.Enabled = Led2.Enabled = false;
+            Display.Clear(doRefresh: true);
+        }
+
+        private static void Run()
         {
             while (isProgramRunning)
             {
@@ -73,7 +79,7 @@ namespace Project
             }
         }
 
-        static void MoveSelection()
+        private static void MoveSelection()
         {
             if (InputManager.IsKeyPressed(Keys.Down, currentKeyDelay))
                 selectedIndex = (selectedIndex + 1) % commands.Count;
@@ -85,6 +91,7 @@ namespace Project
             if (InputManager.IsKeyPressed(Keys.Center) && lastKeyPress != InputManager.LastChanged)
             {
                 SelectedCommand.Execute();
+                Reset();
                 lastKeyPress = InputManager.LastChanged;
             }
 
@@ -94,7 +101,7 @@ namespace Project
                 currentKeyDelay += inputDelay;
         }
 
-        static void Draw(Graphics g)
+        private static void Draw(Graphics g)
         {
             Display.Clear();
             for (int i = 0; i < commands.Count; i++)
@@ -103,7 +110,7 @@ namespace Project
             Display.Update();
         }
 
-        static void DrawCommand(Graphics g, Font font, int index, int padding)
+        private static void DrawCommand(Graphics g, Font font, int index, int padding)
         {
             string text = commands[index].Text;
             int distanceFromCenter = index - selectedIndex;
@@ -122,7 +129,7 @@ namespace Project
             g.DrawString(text, font, textBrush, textRect);
         }
 
-        static RectangleF GetTextRectangle(Graphics g, Font font, string text, int margin, int distanceFromCenter)
+        private static RectangleF GetTextRectangle(Graphics g, Font font, string text, int margin, int distanceFromCenter)
         {
             float height = g.MeasureString(text, font).Height;
             float center = (ScreenRect.Height - height) / 2;
